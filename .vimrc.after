@@ -1,0 +1,140 @@
+" ditch all the vi compatibility nonsense
+set nocompatible
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.eunit/*,*/.test/*,*/rel/builds/*,*.beam
+
+nnoremap <leader>ev :vsplit ~/.vimrc.after<cr>
+nnoremap <leader>sv :so ~/.vimrc.after<cr>
+
+" clear all formatting
+nnoremap <leader><space> :noh<cr>
+nnoremap <leader>a :Ack! 
+
+"Erlang Mappings
+
+" Puts the current word in an io:format statement, e.g.
+"Cat -> io:format(user, "Cat = ~p~n", [Cat]).
+"NOTE: This uses surround (i.e. the plugin), which is why nnoremap won't work, it won't
+"      recursively pick up the ysiw]
+nmap <leader>I yiwysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
+nmap <leader>i yiw] jpysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
+
+" use jj instead of escape so I don't have to reach the Esc key
+inoremap jj <ESC>
+inoremap jk <ESC>
+
+" create a new vert split and focus on it
+nnoremap <leader>w <C-w>v<C-w>l
+
+" make it easier to increase window sizes
+nnoremap <leader>j 10<C-w>-
+nnoremap <leader>k 10<C-w>+
+nnoremap <leader>h 10<C-w>>
+nnoremap <leader>l 10<C-w><
+
+" Make it so I only need one chord to switch windows
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+" autocommand - run automatically when ...
+" FileType - ... filetype changes to ...
+" "erlang"
+" setlocal - only for this buffer
+" shiftwidth - specifies indentation
+" tabstop - # of spaces a tab counts for
+autocmd FileType erlang setlocal shiftwidth=4 tabstop=4 tw=100
+
+set cursorline
+
+" Tell the ack.vim ack fork to do searching in Ctrl-P
+let g:ack_qhandler = 'CtrlPQuickfix'
+
+" strip whitespace, make "space dots" more "in your face"
+" :let @/='' sets the most recent search pattern register to an empty string
+" :let @x is how you "let" to register <x>
+" e.g. :let @a="bob" .. puts "bob" in register 'a'
+nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
+
+" highlight all trailing spaces in "Error" highlighting
+" -----------------------------------------------------
+" \v means "very magic": all characters except alphanumeric and _ have special meaning.
+" see :h :s -> patterns
+nnoremap <leader>w :match Error /\v\s+$/<CR>
+
+syntax enable
+set background=dark
+colorscheme solarized
+
+" Status Line Jiggery Pokery
+" Use term=bold in teh user highlights for bold
+
+"hi User1 ctermbg=darkgrey ctermfg=blue   guibg=darkgrey guifg=blue
+"hi User2 ctermbg=darkgrey ctermfg=black  guibg=darkgrey guifg=black
+"hi User3 ctermbg=blue     ctermfg=white  guibg=blue     guifg=white
+"hi User4 ctermbg=black    ctermfg=yellow guibg=black    guifg=orange
+hi User5 ctermbg=black    ctermfg=red    guibg=black    guifg=red    gui=bold 
+hi User6 ctermbg=black                    guibg=black
+
+set statusline=%6*
+"set statusline+=%1*     "switch to User1 highlight
+set statusline+=\ \ \   "spacing
+set statusline+=%-.90t   "minimum X chars of tail of filename
+"set statusline+=\ \ \   "spacing
+"set statusline+=%*      "switch back to statusline highlight
+set statusline+=\ \ \   "spacing
+"set statusline+=%2*     "switch to User2 highlight
+set statusline+=%y      "filetype
+"set statusline+=%*      "switch back to statusline highlight
+set statusline+=\ \ \   "spacing
+set statusline+=%l      "line number
+set statusline+=/
+set statusline+=%L      "num of lines in file
+set statusline+=\ \ \   "space
+"set statusline+=Buffer\ \#
+"set statusline+=%-3.b   "buffer number
+"set statusline+=\ \ \   "spacing
+set statusline+=Col\ 
+"set statusline+=%3*     "switch to User2 highlight
+"set statusline+=\       "spacing
+set statusline+=%-.c    "column number
+set statusline+=\       "spacing
+"set statusline+=%*      "switch to User3 highlight
+"set statusline+=\ \ \   "spacing
+"set statusline+=Byte\ 
+"set statusline+=%4*     "switch to User2 highlight
+"set statusline+=\       "spacing
+"set statusline+=%-b      "byte number
+"set statusline+=\       "spacing
+"set statusline+=%*      "switch back to satusline highlight
+set statusline+=\ \ \   "spacing
+set statusline+=%5*     "switch to User2 highlight
+set statusline+=%m     "modified flag, right-align
+"set statusline+=%-8m     "modified flag, left-align
+"set statusline+=%*      "switch to User3 highlight
+
+"let g:surround_108 = "\\begin{\1environment: \1}\r\\end{\1\1}" " low-L
+"\begin{AA}asfasdfasdfa\end{AA}
+
+" THIS IS FOR DYNAMICALLY CHANGING THE STATUS LINE WHEN IN DIFFERENT
+" MODES
+
+" first, enable status line always
+" This is key to make the colours show up; not sure why
+"set laststatus=2
+
+"function! InsertStatuslineColor(mode)
+  "if a:mode == 'i'
+    "hi User1 guibg=yellow
+  "elseif a:mode == 'r'
+    "hi User1 guibg=yellow
+  "else
+    "hi User1 guibg=red
+  "endif
+"endfunction
+
+"au InsertEnter * call InsertStatuslineColor(v:insertmode)
+"au InsertLeave * hi User1 guibg=darkgrey
+
+" default the statusline to green when entering Vim
+"hi User1 guibg=darkgrey
