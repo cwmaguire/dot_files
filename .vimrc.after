@@ -20,6 +20,11 @@ nnoremap <leader>a :Ack!
 nmap <leader>I yiwysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
 nmap <leader>i yiw] jpysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
 
+"delete the last character of a line (often a comma)
+nnoremap <leader>e $x
+"add a comma at the end of a line
+nnoremap <leader>c A,<esc>
+
 " use jk instead of escape so I don't have to reach the Esc key
 inoremap jk <ESC>
 
