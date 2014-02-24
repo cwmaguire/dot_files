@@ -19,6 +19,7 @@ nnoremap <leader>a :Ack!
 "      recursively pick up the ysiw]
 nmap <leader>I yiwysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
 nmap <leader>i yiw] jpysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
+nnoremap <leader>L oio:format(user, "~p~n", [?LINE]),<esc>
 
 "delete the last character of a line (often a comma)
 nnoremap <leader>e $x
