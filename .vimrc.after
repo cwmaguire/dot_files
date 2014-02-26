@@ -21,6 +21,9 @@ nmap <leader>I yiwysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
 nmap <leader>i yiw] jpysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
 nnoremap <leader>L oio:format(user, "~p~n", [?LINE]),<esc>
 
+" Open up the master version of the file in a vsplit and turn on syntax " highlighting
+nnoremap <leader>m :let @a=@%<cr>:vnew<cr>:r !git show master:<C-r>a<cr>:setfiletype erlang<cr>
+
 "delete the last character of a line (often a comma)
 nnoremap <leader>e $x
 "add a comma at the end of a line
