@@ -21,19 +21,33 @@ nmap <leader>I yiwysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
 nmap <leader>i yiw] jpysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
 nnoremap <leader>L oio:format(user, "~p~n", [?LINE]),<esc>
 
+" Insert spaces between operators
+"   looks for alpha, numeric or close bracket followed by
+"             0 or 1 spaces followed by
+"             1 or 2 comma, equal, plus, pipe, greater than, hyphen followed by
+"             0 or 1 spaces followed by
+"             alpha, numeric or open bracket
+" It should handle cases where there are no spaces around the operator or just one space:
+"  e.g. a->b, a ->b, or a-> b
+" Test patterns:
+"w=a
+"]++[
+"a->b
+"1+=b
+"w =a
+"1+= b
+nnoremap <leader>f :%s/\([[:alnum:]\]]\=\) \=\([,=+\|>-]\{1,2\}\) \=\([[:alnum:]\[]\)/\1 \2 \3/gc<cr>
+
 " Open up the master version of the file in a vsplit and turn on syntax " highlighting
-nnoremap <leader>m :let @a=@%<cr>:vnew<cr>:r !git show master:<C-r>a<cr>:setfiletype erlang<cr>
+"nnoremap <leader>m :let @a=@%<cr>:vnew<cr>:r !git show master:<C-r>a<cr>:setfiletype erlang<cr>
 
 "delete the last character of a line (often a comma)
-nnoremap <leader>e $x
+"nnoremap <leader>e $x
 "add a comma at the end of a line
-nnoremap <leader>c A,<esc>
+"nnoremap <leader>c A,<esc>
 
 " use jk instead of escape so I don't have to reach the Esc key
 inoremap jk <ESC>
-
-" create a new vert split and focus on it
-nnoremap <leader>w <C-w>v<C-w>l
 
 " make it easier to increase window sizes
 nnoremap <leader>j 10<C-w>-
