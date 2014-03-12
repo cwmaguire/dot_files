@@ -24,7 +24,7 @@ nnoremap <leader>L oio:format(user, "~p~n", [?LINE]),<esc>
 " Insert spaces between operators
 "   looks for alpha, numeric or close bracket followed by
 "             0 or 1 spaces followed by
-"             1 or 2 comma, equal, plus, pipe, greater than, hyphen followed by
+"             1 or 2 equal, plus, pipe, greater than, hyphen followed by
 "             0 or 1 spaces followed by
 "             alpha, numeric or open bracket
 " It should handle cases where there are no spaces around the operator or just one space:
@@ -38,7 +38,10 @@ nnoremap <leader>L oio:format(user, "~p~n", [?LINE]),<esc>
 "1+= b
 " TODO: skip where hyphen is first char
 "       skip where letter, letter (only need trailing space)
-nnoremap <leader>f :%s/\([[:alnum:]\]]\+\) \=\([,=+\|><-]\{1,2\}\) \=\([[:alnum:]\[]\)/\1 \2 \3/gc<cr>
+nnoremap <leader>f :%s/\([[:alnum:]\]]\+\) \=\([=+\|><-]\{1,2\}\) \=\([[:alnum:]\[]\)/\1 \2 \3/gc<cr>
+
+" Insert spaces after commas
+nnoremap <leader>F :%s/\([[:alnum:]_\]]\+\),\([[:alnum:]\[]\)/\1, \2/gc<cr>
 
 " Open up the master version of the file in a vsplit and turn on syntax " highlighting
 "nnoremap <leader>m :let @a=@%<cr>:vnew<cr>:r !git show master:<C-r>a<cr>:setfiletype erlang<cr>
