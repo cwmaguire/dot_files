@@ -4,10 +4,12 @@ set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.eunit/*,*/.test/*,*/rel/builds/*,*.
 
 nnoremap <leader>ev :vsplit ~/.vimrc.after<cr>
 nnoremap <leader>sv :so ~/.vimrc.after<cr>
+nnoremap <leader>s :Gstatus<cr>
+nnoremap <leader>d :Gdiff<cr>
 
 " clear all formatting
 nnoremap <leader><space> :noh<cr>
-nnoremap <leader>a :Ack! 
+nnoremap <leader>a :Ack!
 
 "Erlang Mappings
 
@@ -30,7 +32,7 @@ nnoremap <leader>c A,<esc>
 inoremap jk <ESC>
 
 " create a new vert split and focus on it
-nnoremap <leader>w <C-w>v<C-w>l
+nnoremap <leader>v <C-w>v<C-w>l
 
 " make it easier to increase window sizes
 nnoremap <leader>j 10<C-w>-
@@ -76,7 +78,7 @@ colorscheme solarized
 " Status Line Jiggery Pokery
 " Use term=bold in teh user highlights for bold
 
-hi User5 ctermbg=black    ctermfg=red    guibg=black    guifg=red    gui=bold 
+hi User5 ctermbg=black    ctermfg=red    guibg=black    guifg=red    gui=bold
 hi User6 ctermbg=black                    guibg=black
 
 set statusline=%6*
@@ -89,7 +91,7 @@ set statusline+=%l      "line number
 set statusline+=/
 set statusline+=%L      "num of lines in file
 set statusline+=\ \ \   "space
-set statusline+=Col\ 
+set statusline+=Col\
 set statusline+=%-.c    "column number
 set statusline+=\       "spacing
 set statusline+=\ \ \   "spacing
