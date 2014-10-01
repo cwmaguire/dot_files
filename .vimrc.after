@@ -1,6 +1,6 @@
 " ditch all the vi compatibility nonsense
 set nocompatible
-set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.eunit/*,*/.test/*,*/rel/builds/*,*.beam
+set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.eunit/*,*/.test/*,*/rel/builds/*,*.beam,*logs/*
 
 nnoremap <leader>ev :vsplit ~/.vimrc.after<cr>
 nnoremap <leader>sv :so ~/.vimrc.after<cr>
@@ -22,7 +22,6 @@ nnoremap <leader>a :Ack!
 nmap <leader>I yiwysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
 nmap <leader>i yiw] jpysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
 nnoremap <leader>L oio:format(user, "~p~n", [?LINE]),<esc>
-
 " Insert spaces between operators
 "   looks for alpha, numeric or close bracket followed by
 "             0 or 1 spaces followed by
@@ -77,12 +76,15 @@ nnoremap <C-l> <C-w>l
 " setlocal - only for this buffer
 " shiftwidth - specifies indentation
 " tabstop - # of spaces a tab counts for
-autocmd FileType erlang setlocal shiftwidth=4 tabstop=4 tw=100
+autocmd FileType erlang setlocal shiftwidth=4 tabstop=4 tw=200
 
 set cursorline
 
 " Tell the ack.vim ack fork to do searching in Ctrl-P
 let g:ack_qhandler = 'CtrlPQuickfix'
+" ignore erlang compilation and CT artefacts
+" \v means very magic, no backslashes needed for regexp chars
+let g:ctrlp_custom_ignore = {'file': '\v\.(html|xfm)$'}
 
 " strip whitespace, make "space dots" more "in your face"
 " :let @/='' sets the most recent search pattern register to an empty string
@@ -122,3 +124,5 @@ set statusline+=\       "spacing
 set statusline+=\ \ \   "spacing
 set statusline+=%5*     "switch to User2 highlight
 set statusline+=%m     "modified flag, right-align
+
+set guitablabel=%t\ %m
