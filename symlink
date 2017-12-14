@@ -1,0 +1,5 @@
+ln -s .vimrc.before ~/.vimrc.before
+ln -s .vimrc.after ~/.vimrc.after
+ln -s .bashrc ~/.bashrc
+ln -s .bash_profile ~/.bash_profile
+ln -s .bash_profile_colours ~/.bash_profile_colours
