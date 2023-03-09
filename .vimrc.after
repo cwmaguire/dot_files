@@ -1,11 +1,36 @@
 " ditch all the vi compatibility nonsense
 set nocompatible
 set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.eunit/*,*/.test/*,*/rel/builds/*,*.beam,*logs/*
+set history=10000
+set tabpagemax=100
+
+" nnoremap
+" ||   \
+" |\    "map" - map this key combination to something else
+" | "nore" - "no re[map]" means non-recursive (don't expand the RHS)
+" \
+"  "n" means normal mode, "v" is visual, "i" is insert
 
 nnoremap <leader>ev :vsplit ~/.vimrc.after<cr>
 nnoremap <leader>sv :so ~/.vimrc.after<cr>
-nnoremap <leader>s :Gstatus<cr>
+nnoremap <leader>st :Gstatus<cr>)
 nnoremap <leader>d :Gdiff<cr>
+
+" tabs (for when I'm not in a graphical Vim app)
+nnoremap <nowait> <leader>[ :tabprev<cr>
+nnoremap <nowait> <unique> <leader>] :tabnext<cr>
+
+" Got to tab n with ,n
+nnoremap ,1 1gt
+nnoremap ,2 2gt
+nnoremap ,3 3gt
+nnoremap ,4 4gt
+nnoremap ,5 5gt
+nnoremap ,6 6gt
+nnoremap ,7 7gt
+nnoremap ,8 8gt
+nnoremap ,9 9gt
+nnoremap ,0 10gt
 
 " clear all formatting
 nnoremap <leader><space> :noh<cr>
@@ -22,8 +47,9 @@ nnoremap <leader>a :Ack!
 nmap <leader>I yiwysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
 nmap <leader>i yiw] jpysiw]iio:format(user, "<esc>pa = ~p~n", <esc>A),<esc>
 " ct:pal the variable the cursor is in with the ?MODULE
-nmap <leader>c yiw] ji?MODULE, <esc>p0ys$]0ict:pal("~p: <esc>pa~n\t~p~n", <esc>A),<esc>>>
+nmap <leader>c yiw] ji?MODULE, ?FUNCTION_NAME, <esc>p0ys$]0ict:pal("~p:~p: <esc>pa~n\t~p~n", <esc>A),<esc>>>
 nnoremap <leader>L oio:format(user, "~p~n", [?LINE]),<esc>
+
 " Insert spaces between operators
 "   looks for alpha, numeric or close bracket followed by
 "             0 or 1 spaces followed by
@@ -45,6 +71,11 @@ nnoremap <leader>f :%s/\([[:alnum:]\]]\+\) \=\([=+\|><-]\{1,2\}\) \=\([[:alnum:]
 
 " Insert spaces after commas
 nnoremap <leader>F :%s/\([[:alnum:]_\]]\+\),\([[:alnum:]\[_]\)/\1, \2/gc<cr>
+
+" Fix Evernote HTML files
+" - first, I need to delete everything but the 1 line of content
+" - &gt; and &lt; conversion aren't working; I wonder if I'm getting an error
+nnoremap <leader>z :%s/&nbsp; \?/ /eg:%s/<br>/\r/eg:%s/<\/\?[^>]*>//egg/^$/d:%s/&lt;/</ge:%s/&gt;/>/ge,W
 
 " Open up the master version of the file in a vsplit and turn on syntax " highlighting
 "nnoremap <leader>m :let @a=@%<cr>:vnew<cr>:r !git show master:<C-r>a<cr>:setfiletype erlang<cr>
@@ -86,7 +117,9 @@ set cursorline
 let g:ack_qhandler = 'CtrlPQuickfix'
 " ignore erlang compilation and CT artefacts
 " \v means very magic, no backslashes needed for regexp chars
-let g:ctrlp_custom_ignore = {'file': '\v\.(html|xfm)$'}
+let g:ctrlp_custom_ignore = {'file': '\v\.(html|xfm)$', 'dir': '\vdeps|ebin|.git|logs'}
+let g:ctrlp_max_depth = 5
+let g:ctrlp_use_caching = 1
 
 " strip whitespace, make "space dots" more "in your face"
 " :let @/='' sets the most recent search pattern register to an empty string
@@ -100,9 +133,106 @@ nnoremap <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
 " see :h :s -> patterns
 nnoremap <leader>w :match Error /\v\s+$/<CR>
 
+nnoremap <leader>o :.! pretty<CR>
+
+" DEPRECATED - 2023-02-26 - Using "highlight" now
+" NEVERMIND - 2023-02-36 - "hightlight" has to be done on open
+" Strikethrough & Underline
+"   Operates on whatever is visually selected
+" & is the whole match
+" Before I typed the &, in insert mode, I did:
+"   <C-v>u0336 or <C-v>u0332
+" ... which makes the next character have strikethrough (0336) or underline (0332)
+" NeoVim applies the unicode "combining" code point to the matched letter, not the & here in the replacement string
+" Note: you have to offset the selection 1 character to the left for this to
+" work: if you have 12345 and you want 234 struck through, then you have to
+" highligh 123 and then hit <leader><dash>
+vnoremap <leader>- :s/\%V[^[:cntrl:]]/&̶/ge<CR>
+vnoremap <leader>_ :s/\%V[^[:cntrl:]]/&̲/ge<CR>
+
+" Highlight with ░
+" e.g.
+" ░ This
+" ░ is
+" ░ Highlighted
+" nnoremap <leader>H }k0I.S 
+
+" In visual mode, do all lines that are selected
+vnoremap <leader>H :lua cm_highlight(vim.fn.line("'<"), vim.fn.line("'>"))<CR>
+
+" In normal mode, do the current line (.)
+nnoremap <leader>H :lua cm_highlight(vim.fn.line("."), vim.fn.line("."))<CR>
+
+" Code surround highlight
+"  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+"  ░
+"  ░ Like
+"  ░ This
+"  ░
+"  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+"nnoremap <leader>C }k0I  .S Oi  70A.So.S}Oi  .S{jyy}P
+
+" In visual mode, do all lines that are selected
+vnoremap <leader>C :lua cm_code_highlight(vim.fn.line("'<"), vim.fn.line("'>"))<CR>
+
+" In normal mode, do the current line (.)
+nnoremap <leader>C :lua cm_code_highlight(vim.fn.line("."), vim.fn.line("."))<CR>
+
+" Date Box
+" e.g.
+" ┏━━━━━━━━━━━━━━━━┓
+" ┃   2023-02-25   ┃
+" ┗━━━━━━━━━━━━━━━━┛
+
+nnoremap <leader>D :lua cm_date_box()<CR>
+
+" In normal mode we don't have a range
+" nnoremap ,t :call Table()<CR>
+" nnoremap ,T :call UndoTable()<CR>
+" In visual mode we have a range
+vnoremap ,t :call TableFromRange()<CR>
+
+" wrap lines
+nnoremap ,w :call WrapLine()<CR>
+
+" These highlights need to be re-applied when the file is opened.
+" They don't save with the file.
+" I'd need to encode it somehow.
+" e.g. -strikethrough-
+" Maybe I can make the dashes zero-width or something.
+" Or I could use some zero-width unicode chars
+
+" Underline
+"hi CMUnderlined cterm=underline gui=underline
+"vnoremap <leader>u :lua cm_apply_style('CMUnderlined','underline')<CR>
+"nnoremap <leader>U :lua cm_remove_style('CMUnderlined')<CR>
+
+" Bold
+"hi CMBold cterm=bold gui=bold
+"vnoremap <leader>b :lua cm_apply_style('CMBold', 'bold')<CR>
+"nnoremap <leader>B :lua cm_remove_style('CMBold')<CR>
+
+" Strikethrough
+"hi CMBold cterm=strikethrough gui=strikethrough
+"vnoremap <leader>s :lua cm_apply_style('CMStrikethrough', 'strikethrough')<CR>
+"nnoremap <leader>S :lua cm_remove_style('CMStrikethrough')<CR>
+
+" My highlights are getting cleared, possibly by some other syntax
+" highlighting code/plugin
+augroup custom_highlight
+  autocmd! custom_highlight
+  au ColorScheme * highlight CMUnderline cterm=underline gui=underline
+  au ColorScheme * highlight CMBold cterm=bold gui=bold
+  au ColorScheme * highlight CMStrikethrough cterm=strikethrough gui=strikethrough
+augroup END
+
 syntax enable
 set background=dark
-colorscheme solarized
+" colorscheme solarized
+colorscheme photon
+set guifont=Monospace\ 8
+
+source ~/.regex.vim
 
 " Status Line Jiggery Pokery
 " Use term=bold in teh user highlights for bold
@@ -121,10 +251,18 @@ set statusline+=/
 set statusline+=%L      "num of lines in file
 set statusline+=\ \ \   "space
 set statusline+=Col\
-set statusline+=%-.c    "column number
+set statusline+=%-.c    "column number (byte index). see :h statusline
 set statusline+=\       "spacing
 set statusline+=\ \ \   "spacing
 set statusline+=%5*     "switch to User2 highlight
 set statusline+=%m     "modified flag, right-align
 
 set guitablabel=%t\ %m
+
+" 2022-12-01
+" Moved this to my init.vim because it was included in the keybinding sample
+" from the erlang_ls webpage:
+"   https://erlang-ls.github.io/getting-started/vim/
+" lua <<EOF
+" require'lspconfig'.erlangls.setup{}
+" EOF
